@@ -59,10 +59,13 @@
 
         function generaTiendas(){
              var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(38.957184, -5.862339),
+                position: map.getCenter(),
+                animation:  google.maps.Animation.DROP,
+                draggable:true,
                 icon:'images/user.png',
-                map: map});
-        }
+                map:map});
+
+            }
     </script>
 </head>
 
