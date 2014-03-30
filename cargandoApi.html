@@ -16,7 +16,7 @@
         #map_canvas {
             height: 100%
         }
-        #label {
+        #info {
             position: absolute;
             top: -30px;
             left: 100px;
@@ -37,15 +37,16 @@
             var map = new google.maps.Map(document.getElementById("map_canvas"),
                 mapOptions);
 
-            document.getElementById("label").textContent="z: "+map.getZoom();
+            document.getElementById("zoom").textContent="z: "+map.getZoom();
             google.maps.event.addListener(map, 'zoom_changed', function() {
 
-                document.getElementById("label").textContent="z: "+map.getZoom();
+                document.getElementById("zoom").textContent="z: "+map.getZoom();
             });
 
-            google.maps.event.addListener(map, 'mousemove', function() {
+            google.maps.event.addListener(map, 'mousemove', function(e) {
 
-                console.log("movimiento");
+                console.log(e.latLng);
+                document.getElementById("latLng").textContent="c: "+e.latLng;
             });
         }
     </script>
@@ -53,7 +54,11 @@
 
 <body onload="initialize()">
     <div id="map_canvas" style="width:100%;height:100%"></div>
-    <p id="label"></p>
+    <dic id="info">
+        <p id="zoom"></p>
+        <p id="latLng"></p>
+    </dic>
+
 </body>
 
 </html>
