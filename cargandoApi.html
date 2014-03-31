@@ -29,6 +29,7 @@
     <script type="text/javascript">
         var map = null;
 
+
         function initialize() {
             var mapOptions = {
                 center: new google.maps.LatLng(38.957184, -5.862339),
@@ -57,6 +58,7 @@
                 document.getElementById("latLng").textContent = "c: " + e.latLng;
             });
 
+
         }
 
         function marcarCentro() {
@@ -68,10 +70,6 @@
                 map: map
             });
         }
-
-
-
-
 
 
         function generaTiendas() {
@@ -90,6 +88,21 @@
                     animation: google.maps.Animation.DROP,
                     map: map,
                 });
+
+                //Las pajas mentales del javaScript
+                (function(marker){
+                google.maps.event.addListener(marker, 'click', function()
+                 {
+                        if(!marker.infoWindow)
+                        {
+                            var infoWindow = new google.maps.InfoWindow({ content: "Hola caracola",
+                                size: new google.maps.Size(50,50)
+                              });
+                            marker.infoWindow=infoWindow;
+                        }
+                        marker.infoWindow.open(map,marker);
+                 });
+                })(marker);
             }
         }
     </script>
