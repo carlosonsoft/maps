@@ -88,9 +88,43 @@
             });
         }
 
+         //Calcula cuantos metros son un grado en función de la latitud
+        function metersOfLatLng(latitude) // Compute lengths of degrees
+         {
+            // Convert latitude to radians
+            var lat = latitude * (2.0 * Math.PI) / 360.0;
 
+            // Set up "Constants"
+            var m1 = 111132.92; // latitude calculation term 1
+            var m2 = -559.82; // latitude calculation term 2
+            var m3 = 1.175; // latitude calculation term 3
+            var m4 = -0.0023; // latitude calculation term 4
+            var p1 = 111412.84; // longitude calculation term 1
+            var p2 = -93.5; // longitude calculation term 2
+            var p3 = 0.118; // longitude calculation term 3
 
+            // Calculate the length of a degree of latitude and longitude in meters
+            latlen = m1 + (m2 * Math.cos(2 * lat)) + (m3 * Math.cos(4 * lat)) +
+                (m4 * Math.cos(6 * lat));
+            longlen = (p1 * Math.cos(lat)) + (p2 * Math.cos(3 * lat)) +
+                (p3 * Math.cos(5 * lat));
 
+            // Place values in output fields
+            //obj.latmeters.value = Math.round(latlen);
+            //obj.longmeters.value = Math.round(longlen);
+
+            return {
+                latlen: latLen,
+                lngLen: longlen
+            };
+        }
+
+         //Calcula los grados de diferencia en base a una coordenada origen y un desplazamiento en metros horizontal y otro vertical
+        function offsetCoordinates(latOrigin, lngOrigin, latOffset, lngOffset) {
+
+        }
+
+         //Calcula la distancia en metros de dos coordenadas
         function distance(lat1, lon1, lat2, lon2) {
             var R = 6371; // km (change this constant to get miles)
             var dLat = (lat2 - lat1) * Math.PI / 180;
