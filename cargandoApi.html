@@ -28,7 +28,7 @@
     </script>
     <script type="text/javascript">
         var map = null;
-
+        var circulo = null;
 
         function initialize() {
             var mapOptions = {
@@ -75,7 +75,7 @@
                 radius: 200
             };
 
-            var circulo = new google.maps.Circle(circleOptions);
+            circulo = new google.maps.Circle(circleOptions);
         }
 
 
@@ -108,6 +108,14 @@
             return d;
         }
 
+
+        function cambiarRadio(valor) {
+            var numero = parseInt(valor);
+            if (isNaN(numero) || numero < 0 || numero > 2000) return;
+
+            circulo.setRadius(numero);
+            inputRadio.select();
+        }
 
 
         function generaTiendas() {
@@ -153,6 +161,9 @@
         <p id="latLng">c:</p>
         <p>
             <button onclick="generaTiendas()">Generar tiendas en don benito</button>
+        </p>
+        <p>
+            <input id="inputRadio" type="number" min="0" max="2000" placeholder="metros" onchange="cambiarRadio(this.value)" />
         </p>
     </dic>
 
