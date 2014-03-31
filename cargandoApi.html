@@ -27,7 +27,8 @@
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v3&sensor=false">
     </script>
     <script type="text/javascript">
-        var map=null;
+        var map = null;
+
         function initialize() {
             var mapOptions = {
                 center: new google.maps.LatLng(38.957184, -5.862339),
@@ -38,34 +39,59 @@
             map = new google.maps.Map(document.getElementById("map_canvas"),
                 mapOptions);
 
+            marcarCentro();
 
-            document.getElementById("zoom").textContent="z: "+map.getZoom();
+            document.getElementById("zoom").textContent = "z: " + map.getZoom();
             google.maps.event.addListener(map, 'zoom_changed', function() {
 
-                document.getElementById("zoom").textContent="z: "+map.getZoom();
+                document.getElementById("zoom").textContent = "z: " + map.getZoom();
             });
 
             google.maps.event.addListener(map, 'mousemove', function(e) {
 
-               // document.getElementById("latLng").textContent="c: "+e.latLng;
+                // document.getElementById("latLng").textContent="c: "+e.latLng;
             });
 
             google.maps.event.addListener(map, 'click', function(e) {
 
-                document.getElementById("latLng").textContent="c: "+e.latLng;
+                document.getElementById("latLng").textContent = "c: " + e.latLng;
             });
 
         }
 
-        function generaTiendas(){
-             var marker = new google.maps.Marker({
+        function marcarCentro() {
+            var marker = new google.maps.Marker({
                 position: map.getCenter(),
-                animation:  google.maps.Animation.DROP,
-                draggable:true,
-                icon:'images/user.png',
-                map:map});
+                animation: google.maps.Animation.DROP,
+                draggable: false,
+                icon: 'images/user.png',
+                map: map
+            });
+        }
 
+
+
+
+
+
+        function generaTiendas() {
+            // Add 5 markers to the map at random locations.
+            var southWest = new google.maps.LatLng(38.961577849004996, -5.872750282287598);
+            var northEast = new google.maps.LatLng(38.949163274109786, -5.85146427154541);
+            //var bounds = new google.maps.LatLngBounds(southWest, northEast);
+            //map.fitBounds(bounds);
+            var lngSpan = northEast.lng() - southWest.lng();
+            var latSpan = northEast.lat() - southWest.lat();
+            for (var i = 0; i < 10; i++) {
+                var location = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
+                    southWest.lng() + lngSpan * Math.random());
+                var marker = new google.maps.Marker({
+                    position: location,
+                    animation: google.maps.Animation.DROP,
+                    map: map,
+                });
             }
+        }
     </script>
 </head>
 
@@ -74,7 +100,9 @@
     <dic id="info">
         <p id="zoom"></p>
         <p id="latLng">c:</p>
-        <p><button onclick="generaTiendas()">Generar tiendas en don benito</button></p>
+        <p>
+            <button onclick="generaTiendas()">Generar tiendas en don benito</button>
+        </p>
     </dic>
 
 </body>
