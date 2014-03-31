@@ -43,8 +43,9 @@
             marcarCentro();
 
             pintarCirculo();
+            pintarVentana();
 
-            pintarRectangulo();
+            //pintarLimitesTiendas();
 
             document.getElementById("zoom").textContent = "z: " + map.getZoom();
             google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -64,7 +65,20 @@
 
         }
 
-        function pintarRectangulo() {
+        function pintarVentana() {
+            var bounds = calculaVentana(map.getCenter().lat(), map.getCenter().lng(), 200, 200);
+            var rectangle = new google.maps.Rectangle({
+                strokeColor: '#0000FF',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#0000FF',
+                fillOpacity: 0.35,
+                map: map,
+                bounds: bounds
+            });
+        }
+
+        function pintarLimitesTiendas() {
             var rectangle = new google.maps.Rectangle({
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
@@ -129,15 +143,34 @@
             //obj.longmeters.value = Math.round(longlen);
 
             return {
-                latlen: latLen,
+                latLen: latlen,
                 lngLen: longlen
             };
         }
 
          //Calcula los grados de diferencia en base a una coordenada origen y un desplazamiento en metros horizontal y otro vertical
         function offsetCoordinates(latOrigin, lngOrigin, latOffset, lngOffset) {
+            var len = metersOfLatLng(latOrigin);
 
+            var latDelta = latOffset / len.latLen;
+            var lngDelta = lngOffset / len.lngLen;
+
+            return {
+                latDelta: latDelta,
+                lngDelta: lngDelta
+            };
         }
+
+         //Calcula una ventana rectangular desde un origen con una distancia en metros, devuelve como un objeto LatLngBounds
+        function calculaVentana(latOrigin, lngOrigin, latOffset, lngOffset) {
+            var delta = offsetCoordinates(latOrigin, lngOrigin, latOffset, lngOffset);
+
+            var bounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(latOrigin + delta.latDelta, lngOrigin - delta.lngDelta),
+                new google.maps.LatLng(latOrigin - delta.latDelta, lngOrigin + delta.lngDelta));
+            return bounds;
+        }
+
 
          //Calcula la distancia en metros de dos coordenadas
         function distance(lat1, lon1, lat2, lon2) {
