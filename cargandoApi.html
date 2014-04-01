@@ -23,6 +23,9 @@
             font-size: 14px;
             z-index: 1
         }
+        #inputRadio {
+            width: 4em
+        }
     </style>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v3&sensor=false">
     </script>
@@ -271,7 +274,8 @@
             <button onclick="generaTiendas()">Generar tiendas en don benito</button>
         </p>
         <p>
-            <input id="inputRadio" type="number" min="0" max="2000" placeholder="metros" onchange="cambiarRadio(this.value)" />
+            <label>distancia</label>
+            <input id="inputRadio" type="number" min="0" max="2000" placeholder="metros" onchange="cambiarRadio(this.value)" value="200" />
         </p>
         <p>
             <input id="inputVentanaVisible" type="checkbox" onchange="visualizarVentana(this.checked)">Visualizar Ventana</input>
