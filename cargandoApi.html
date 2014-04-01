@@ -30,6 +30,7 @@
         var map = null;
         var circulo = null;
         var ventana = null;
+        var markers = null;
 
         function initialize() {
             var mapOptions = {
@@ -188,12 +189,13 @@
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             var d = R * c;
 
-            if (d > 1) return Math.round(d) + "km";
-            else if (d <= 1) return Math.round(d * 1000) + "m";
-
-            return d;
+            return d * 1000; //La pasamos a metros
         }
 
+        function distance2String(d) {
+            if (d > 1000) return Math.round(d / 10) / 100 + "km"; //Lo dividimos por mil pero lo multiplicamos por 100 redeondeo 2 decs
+            else return Math.round(d) + "m";
+        }
 
         function cambiarRadio(valor) {
             var numero = parseInt(valor);
@@ -202,6 +204,14 @@
             var bounds = calculaVentana(map.getCenter().lat(), map.getCenter().lng(), numero, numero);
             ventana.setBounds(bounds);
             circulo.setRadius(numero);
+
+            //Actualizamos el color de los marcadores
+            if (markers)
+                for (var i = 0; i < markers.length; i++) {
+                    var m = markers[i];
+                    m.setIcon(m.distancia > circulo.getRadius() ? 'images/photography.red.png' : 'images/photography.green.png');
+                }
+
             inputRadio.select();
         }
 
@@ -217,13 +227,18 @@
             //map.fitBounds(bounds);
             var lngSpan = northEast.lng() - southWest.lng();
             var latSpan = northEast.lat() - southWest.lat();
+            if (markers)
+                for (var i = 0; i < markers.length; i++) markers[i].setMap(null);
+            markers = [];
             for (var i = 0; i < 10; i++) {
                 var location = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
                     southWest.lng() + lngSpan * Math.random());
+                var distancia = distance(location.lat(), location.lng(), map.getCenter().lat(), map.getCenter().lng());
                 var marker = new google.maps.Marker({
                     position: location,
                     animation: google.maps.Animation.DROP,
-                    icon: 'images/photography.red.png',
+                    icon: distancia > circulo.getRadius() ? 'images/photography.red.png' : 'images/photography.green.png',
+                    distancia: distancia,
                     map: map,
                 });
 
@@ -232,7 +247,7 @@
                     google.maps.event.addListener(marker, 'click', function() {
                         if (!marker.infoWindow) {
                             var infoWindow = new google.maps.InfoWindow({
-                                content: "d: " + distance(marker.position.lat(), marker.position.lng(), map.getCenter().lat(), map.getCenter().lng()),
+                                content: "d: " + distance2String(marker.distancia),
                                 size: new google.maps.Size(50, 50)
                             });
                             marker.infoWindow = infoWindow;
@@ -240,7 +255,9 @@
                         marker.infoWindow.open(map, marker);
                     });
                 })(marker);
+                markers.push(marker);
             }
+
         }
     </script>
 </head>
