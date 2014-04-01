@@ -29,6 +29,7 @@
     <script type="text/javascript">
         var map = null;
         var circulo = null;
+        var ventana = null;
 
         function initialize() {
             var mapOptions = {
@@ -36,6 +37,8 @@
                 zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
+
+
 
             map = new google.maps.Map(document.getElementById("map_canvas"),
                 mapOptions);
@@ -67,12 +70,13 @@
 
         function pintarVentana() {
             var bounds = calculaVentana(map.getCenter().lat(), map.getCenter().lng(), 200, 200);
-            var rectangle = new google.maps.Rectangle({
+            ventana = new google.maps.Rectangle({
                 strokeColor: '#0000FF',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: '#0000FF',
                 fillOpacity: 0.35,
+                visible: false,
                 map: map,
                 bounds: bounds
             });
@@ -193,12 +197,17 @@
 
         function cambiarRadio(valor) {
             var numero = parseInt(valor);
-            if (isNaN(numero) || numero < 0 || numero > 2000) return;
+            if (isNaN(numero) || numero < 0 || numero > 100000) return;
 
+            var bounds = calculaVentana(map.getCenter().lat(), map.getCenter().lng(), numero, numero);
+            ventana.setBounds(bounds);
             circulo.setRadius(numero);
             inputRadio.select();
         }
 
+        function visualizarVentana(valorBooleano) {
+            ventana.setVisible(valorBooleano);
+        }
 
         function generaTiendas() {
             // Add 5 markers to the map at random locations.
@@ -214,7 +223,7 @@
                 var marker = new google.maps.Marker({
                     position: location,
                     animation: google.maps.Animation.DROP,
-                    icon: 'images/user.png',
+                    icon: 'images/photography.red.png',
                     map: map,
                 });
 
@@ -246,6 +255,9 @@
         </p>
         <p>
             <input id="inputRadio" type="number" min="0" max="2000" placeholder="metros" onchange="cambiarRadio(this.value)" />
+        </p>
+        <p>
+            <input id="inputVentanaVisible" type="checkbox" onchange="visualizarVentana(this.checked)">Visualizar Ventana</input>
         </p>
     </dic>
 
