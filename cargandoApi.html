@@ -34,10 +34,11 @@
         var circulo = null;
         var ventana = null;
         var markers = null;
+        var centro = new google.maps.LatLng(38.957184, -5.862339);
 
         function initialize() {
             var mapOptions = {
-                center: new google.maps.LatLng(38.957184, -5.862339),
+                center: centro,
                 zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
@@ -73,7 +74,7 @@
         }
 
         function pintarVentana() {
-            var bounds = calculaVentana(map.getCenter().lat(), map.getCenter().lng(), 200, 200);
+            var bounds = calculaVentana(centro.lat(), centro.lng(), 200, 200);
             ventana = new google.maps.Rectangle({
                 strokeColor: '#0000FF',
                 strokeOpacity: 0.8,
@@ -108,7 +109,7 @@
                 fillColor: '#FF0000',
                 fillOpacity: 0.35,
                 map: map,
-                center: map.getCenter(),
+                center: centro,
                 radius: 200
             };
 
@@ -118,7 +119,7 @@
 
         function marcarCentro() {
             var marker = new google.maps.Marker({
-                position: map.getCenter(),
+                position: centro,
                 animation: google.maps.Animation.DROP,
                 draggable: false,
                 map: map
@@ -204,7 +205,7 @@
             var numero = parseInt(valor);
             if (isNaN(numero) || numero < 0 || numero > 100000) return;
 
-            var bounds = calculaVentana(map.getCenter().lat(), map.getCenter().lng(), numero, numero);
+            var bounds = calculaVentana(centro.lat(), centro.lng(), numero, numero);
             ventana.setBounds(bounds);
             circulo.setRadius(numero);
 
@@ -236,7 +237,7 @@
             for (var i = 0; i < 10; i++) {
                 var location = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
                     southWest.lng() + lngSpan * Math.random());
-                var distancia = distance(location.lat(), location.lng(), map.getCenter().lat(), map.getCenter().lng());
+                var distancia = distance(location.lat(), location.lng(), centro.lat(), centro.lng());
                 var marker = new google.maps.Marker({
                     position: location,
                     animation: google.maps.Animation.DROP,
